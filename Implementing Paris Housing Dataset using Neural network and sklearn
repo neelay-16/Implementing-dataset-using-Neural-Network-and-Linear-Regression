@@ -1,0 +1,79 @@
+import pandas as pd
+dataset = pd.read_csv('ParisHousing.csv')
+dataset
+y = dataset['price']
+dataset.isnull()
+import seaborn as sns
+sns.heatmap(dataset.isnull())
+dataset.info()
+price = dataset['price']
+price
+sns.distplot(price,kde=False,bins = 50)
+dataset.corr()
+Hasyard=dataset['hasYard']
+Hasyard=pd.get_dummies(Hasyard,drop_first=True)
+Haspool=dataset['hasPool']
+Haspool=pd.get_dummies(Haspool,drop_first=True)
+Isnewbuilt=dataset['isNewBuilt']
+Isnewbuilt=pd.get_dummies(Isnewbuilt,drop_first=True)
+Hasstormprotector=dataset['hasStormProtector']
+Hasstormprotector=pd.get_dummies(Hasstormprotector,drop_first=True)
+Hasstorageroom=dataset['hasStorageRoom']
+Hasstorageroom=pd.get_dummies(Hasstorageroom,drop_first=True)
+dataset.columns
+dataset.drop(['numPrevOwners','hasYard','hasPool','isNewBuilt','hasStormProtector','hasStorageRoom'],axis = 1,inplace = True)
+X=pd.concat([dataset,Hasyard,Haspool,Isnewbuilt,Hasstormprotector,Hasstorageroom],axis = 1)
+X
+#Neural Network
+from keras.models import Sequential
+model = Sequential()
+model.get_config()
+from keras.layers import Dense
+# Layer 1
+model.add(Dense(units=8,
+                input_dim = 16,
+                bias_initializer="zeros",
+                kernel_initializer="zeros")
+         )
+# Layer 2
+model.add(Dense(units=8,
+                bias_initializer="zeros",
+                kernel_initializer="zeros",
+                activation = "relu")
+         )
+# Layer 3
+model.add(Dense(units=10,
+                bias_initializer="zeros",
+                kernel_initializer="zeros",
+                activation = "relu"
+               )
+         )
+# Layer 4
+model.add(Dense(units=1,
+                bias_initializer="zeros",
+                kernel_initializer="zeros",
+                activation = "linear"
+               )
+         )
+model.summary()
+model.compile(loss = "MeanSquaredError")
+
+model.fit(X,y,epochs = 20)
+model.get_weights()
+#Regression
+from sklearn.linear_model import LinearRegression
+model=LinearRegression()
+model.fit(X,y)
+X.columns = X.columns.astype(str)
+from sklearn.model_selection import train_test_split
+X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.30,random_state=42)
+y_pred = model.predict(X_test)
+y_test
+y_pred
+
+
+
+
+
+
+
